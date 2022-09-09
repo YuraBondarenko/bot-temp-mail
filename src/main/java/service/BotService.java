@@ -3,6 +3,7 @@ package service;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.SendMessage;
+import config.ConfigProperties;
 import db.Storage;
 import dto.Email;
 import dto.Inbox;
@@ -14,8 +15,7 @@ import java.util.*;
 public class BotService {
     private final EmailService emailService = new EmailService();
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-
-    TelegramBot bot = new TelegramBot(System.getenv("BOT_API_KEY") != null ? System.getenv("BOT_API_KEY") : System.getProperty("BOT_API_KEY"));
+    private final TelegramBot bot = new TelegramBot(ConfigProperties.getProperty("BOT_API_KEY"));
 
     public void start() {
         bot.setUpdatesListener(updates -> {
@@ -49,12 +49,13 @@ public class BotService {
                         List<Email> emails = emailService.getEmails(inbox);
                         if (emails == null) {
                             Storage.remove(member);
-                            sendMessage(member.getChatId(), "Your temp mail is inactive. Create new");
+                            sendMessage(member.getChatId(), "Your temp mail is inactive. Create new by /create.");
                             return;
                         }
                         Date date = new Date();
                         emails.forEach(email ->
-                                bot.execute(new SendMessage(member.getChatId(), "To: " + inbox.getAddress() + "\nFrom: " + email.getFromAddress() + "\nSubject: " + email.getSubject()
+                                bot.execute(new SendMessage(member.getChatId(), "To: " + inbox.getAddress()
+                                        + "\nFrom: " + email.getFromAddress() + "\nSubject: " + email.getSubject()
                                         + "\nDate: " + sdf.format(new Date(email.getDate()))
                                         + "\n\n" + email.getBody())));
                         inbox.setLastDate(date);
