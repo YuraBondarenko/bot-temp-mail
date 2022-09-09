@@ -7,26 +7,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Storage {
-    private static final Map<Member, Inbox> map = new HashMap<>();
+    private static final Map<Member, Inbox> storage = new HashMap<>();
 
     public static void addOrUpdateInbox(Member member, Inbox inbox) {
-        map.put(member, inbox);
+        storage.put(member, inbox);
     }
 
 
     public static void remove(Member member) {
-        map.remove(member);
+        storage.remove(member);
     }
 
     public static Inbox getInbox(Member member) {
-        return map.get(member);
+        return storage.get(member);
     }
 
     public static Map<Member, Inbox> getKeys() {
-        return map;
+        return storage;
     }
 
     public static boolean contains(Member member) {
-        return map.containsKey(member);
+        return storage.containsKey(member);
     }
 }
