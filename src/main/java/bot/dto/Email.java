@@ -1,4 +1,4 @@
-package dto;
+package bot.dto;
 
 public class Email {
     private final String toAddress;

@@ -1,4 +1,4 @@
-package service;
+package bot.service;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.net.URL;
