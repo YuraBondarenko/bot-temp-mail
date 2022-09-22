@@ -1,4 +1,4 @@
-package config;
+package bot.config;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +12,7 @@ public class ConfigProperties {
         try {
             input = ConfigProperties.class.getClassLoader().getResourceAsStream("application.properties");
             prop.load(input);
+            System.out.println("success load properties");
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         } finally {

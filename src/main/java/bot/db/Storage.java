@@ -1,11 +1,12 @@
-package db;
+package bot.db;
 
-import dto.Inbox;
-import dto.Member;
+import bot.domain.Inbox;
+import bot.domain.Member;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class Storage {
     private static final Map<Member, Inbox> storage = new HashMap<>();
 

@@ -1,26 +1,32 @@
-package service;
+package bot.service;
 
-import dto.Email;
-import dto.Inbox;
+import bot.domain.Inbox;
+import bot.dto.Email;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static service.RequestService.sendRequest;
+public class ApiEmailService {
 
-public class EmailService {
-    public List<Email> getEmails(Inbox inbox) {
+    public static Inbox generateInbox() {
+        String response = RequestService.sendRequest("/generate");
+        JSONObject json = new JSONObject(response);
+        return new Inbox(json.getString("address"), json.getString("token"));
+    }
+
+    @Nullable
+    public static List<Email> getEmails(Inbox inbox) {
         try {
-            String s = sendRequest("/auth/" + inbox.getToken());
+            String s = RequestService.sendRequest("/auth/" + inbox.getToken());
             JSONObject json = new JSONObject(s);
             if (json.has("token") && json.getString("token").equals("invalid")) {
                 return null;
             }
-
             Email[] emails = new Email[json.getJSONArray("email").length()];
-            for(int i = 0; i < emails.length; i++) {
+            for (int i = 0; i < emails.length; i++) {
                 JSONObject obj = json.getJSONArray("email").getJSONObject(i);
                 emails[i] = new Email(
                         obj.getString("to"),
@@ -33,13 +39,8 @@ public class EmailService {
             }
             return Arrays.stream(emails).collect(Collectors.toList());
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
-    }
-
-    public Inbox generateInbox() {
-        String response = sendRequest("/generate");
-        JSONObject json = new JSONObject(response);
-        return new Inbox(json.getString("address"), json.getString("token"));
     }
 }
